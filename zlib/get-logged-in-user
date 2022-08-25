@@ -1,0 +1,35 @@
+#!/bin/zsh
+################################
+## Wake County Public Schools ##
+## Z Shell function library   ##
+################################
+## Contributor: Andrew Zimmer ##
+## Last updated: 06/30/2022   ##
+################################
+## Purpose: Get the current   ##
+## user on the machine at the ##
+## GUI level and report back. ##
+################################
+## Arguments:                 ##
+##   None.                    ##
+################################
+## Output:                    ##
+## - Username if found.       ##
+## - Empty string if no user. ##
+################################
+
+get-logged-in-user() {
+	# Export our customized path
+	export PATH="/Library/WCPSS/Apps/bin/:/Library/WCPSS/Apps/sbin/:Library/WCPSS/Scripts/Executables/:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/libexec"
+
+	# Set -e/-o errexit to force the script to terminate on any non-zero exit code
+	# Set -u/-o nounset to force the script to exit if unset variables are called
+	set -o errexit
+	set -o nounset
+
+	# Declare variable and check '/dev/console' to detect if anyone is logged in.
+	local console_user=""$( echo "show State:/Users/ConsoleUser" | /usr/sbin/scutil | /usr/bin/awk '/Name :/ && ! /loginwindow/ { print $3 }' )""
+
+	# Return the value, returning an empty string if no user is logged in.
+	[[ -n "${console_user}" ]] && echo "${console_user}" || echo ""
+}

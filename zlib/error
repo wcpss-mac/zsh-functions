@@ -1,0 +1,70 @@
+#!/bin/zsh
+################################
+## Wake County Public Schools ##
+## Z Shell function library   ##
+################################
+## Contributor: Andrew Zimmer ##
+## Last updated: 06/30/2022   ##
+################################
+## Purpose: Use 'dd' to clone ##
+## a binary image from file   ##
+## to file (or disk to disk). ##
+################################
+## Arguments:                 ##
+## - Source file or disk      ##
+## - Target file or disk      ##
+## - Needs admin or not?      ##
+## - Block size               ##
+################################
+## Output:                    ##
+## - Errors (if any)          ##
+## - Completion message.      ##
+################################
+
+access-check() {
+	# Export our customized path
+	export PATH="/Library/WCPSS/Apps/bin/:/Library/WCPSS/Apps/sbin/:Library/WCPSS/Scripts/Executables/:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/libexec"
+
+	# Set -e/-o errexit to force the script to terminate on any non-zero exit code
+	# Set -u/-o nounset to force the script to exit if unset variables are called
+	set -o errexit
+	set -o nounset
+
+	# Declare some variables
+  local source_path=""
+  local target_path=""
+	local admin=""
+	local block_size="2M"
+
+  # Check if we were given any input.
+
+  # If the argument is empty, error out. We need to know that.
+  # If there is valid input, set 'source_dir' to that.
+  if [[ -z "$1" ]]; then
+    echo "A source file needs to be provided. Exiting."
+    exit 1
+  else
+    source_path="$1"
+  fi
+
+	# If the argument is empty, error out. We need to know that.
+  # If there is valid input, set 'source_dir' to that.
+  if [[ -z "$2" ]]; then
+    echo "A target file needs to be provided. Exiting."
+    exit 1
+  else
+    source_path="$1"
+  fi
+
+	# Try to 'ls' the directory, piping output to the blackhole at /dev/null
+	# so that all we get is a success or failure exit code.
+	response=$(ls "${path_to_check}" 2>/dev/null )
+
+	if [[ -z "${response}" ]]; then
+    # The variable was empty, do nothing. The reply is handled by the function
+		# itself.
+  else
+		# Reply with the path_to_check
+		echo "${path_to_check}"
+  fi
+}

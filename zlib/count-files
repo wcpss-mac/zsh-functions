@@ -1,0 +1,59 @@
+#!/bin/zsh
+################################
+## Wake County Public Schools ##
+## Z Shell function library   ##
+################################
+## Contributor: Andrew Zimmer ##
+## Last updated: 06/30/2022   ##
+################################
+## Purpose: Determine which   ##
+## folders the Terminal app   ##
+## has access to.             ##
+################################
+## Arguments:                 ##
+## - Directory to check.      ##
+################################
+## Output:                    ##
+## - If access granted, then  ##
+##   return the directory.    ##
+## - If access not granted    ##
+##   return empty string.     ##
+################################
+
+access-check() {
+	# Export our customized path
+	export PATH="/Library/WCPSS/Apps/bin/:/Library/WCPSS/Apps/sbin/:Library/WCPSS/Scripts/Executables/:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/libexec"
+
+	# Set -e/-o errexit to force the script to terminate on any non-zero exit code
+	# Set -u/-o nounset to force the script to exit if unset variables are called
+	set -o errexit
+	set -o nounset
+
+	# Declare some variables
+  local path_to_check=""
+  local response=""
+	local formatted_response=""
+
+  # Check if we were given any input.
+
+  # If the argument is empty, error out. We need to know that.
+  # If there is valid input, set 'source_dir' to that.
+  if [[ -z "$1" ]]; then
+    echo "A directory needs to be provided. Exiting."
+    exit 1
+  else
+    path_to_check="$1"
+  fi
+
+	# Try to 'ls' the directory, piping output to the blackhole at /dev/null
+	# so that all we get is a success or failure exit code.
+	response=$(ls "${path_to_check}" 2>/dev/null )
+
+	if [[ -z "${response}" ]]; then
+    # The variable was empty, do nothing. The reply is handled by the function
+		# itself.
+  else
+		# Reply with the path_to_check
+		echo "${path_to_check}"
+  fi
+}

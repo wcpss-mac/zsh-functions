@@ -1,0 +1,45 @@
+#!/bin/zsh
+################################
+## Wake County Public Schools ##
+## Z Shell function library   ##
+################################
+## Contributor: Andrew Zimmer ##
+## Last updated: 06/30/2022   ##
+################################
+## Purpose: Determine if a    ##
+## process is running         ##
+################################
+## Arguments:                 ##
+## - Process to check.        ##
+################################
+## Output:                    ##
+## - "Yes" if running.        ##
+## - "No" if not running.     ##
+################################
+
+process-running() {
+	# Export our customized path
+	export PATH="/Library/WCPSS/Apps/bin/:/Library/WCPSS/Apps/sbin/:Library/WCPSS/Scripts/Executables/:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/libexec"
+
+	# Set -e/-o errexit to force the script to terminate on any non-zero exit code
+	# Set -u/-o nounset to force the script to exit if unset variables are called
+	set -o errexit
+	set -o nounset
+
+	# Declare variable and use 'pgrep' to populate it.
+	# We would need an array to capture all instances of a process that spawns
+	# multiple instances, but here we only care if ANY instances are running.
+	local process="$1"
+	local result=""
+	local proc_hits="$(pgrep "$1")"
+
+	# Check if 'proc_hits' contains any content.
+	if [[ -z "${proc_hits}" ]]; then
+		result="No"
+	else
+		result="Yes"
+	fi
+
+	# Return the value, returning empty string if no user found.
+	[[ -n "${result}" ]] && echo "${result}" || echo ""
+}
