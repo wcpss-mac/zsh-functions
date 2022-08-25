@@ -1,0 +1,44 @@
+#!/bin/zsh
+################################
+## Wake County Public Schools ##
+## Z Shell function library   ##
+################################
+## Contributor: Andrew Zimmer ##
+## Last updated: 06/30/2022   ##
+################################
+## Purpose: Get the current   ##
+## user on the machine at the ##
+## shell prompt level         ##
+################################
+## Arguments:                 ##
+##   None.                    ##
+################################
+## Output:                    ##
+## - Username if found.       ##
+## - Empty string if no user  ##
+## - Error code 1 if root is. ##
+##   logged in or acting as   ##
+##   root via sudo.           ##
+################################
+
+get-username() {
+	# Export our customized path
+	export PATH="/Library/WCPSS/Apps/bin/:/Library/WCPSS/Apps/sbin/:Library/WCPSS/Scripts/Executables/:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/libexec"
+
+	# Set -e/-o errexit to force the script to terminate on any non-zero exit code
+	# Set -u/-o nounset to force the script to exit if unset variables are called
+	set -o errexit
+	set -o nounset
+
+	# Declare variable and use 'whoami' to populate it.
+	local username="$(whoami)"
+
+	# We don't want to run as root!
+	if [[ "${username}" == "root" ]]; then
+		echo "Can't run as root, exiting."
+		exit 1
+	fi
+
+	# Return the value, returning empty string if no user found.
+	[[ -n "${username}" ]] && echo "${username}" || echo ""
+}

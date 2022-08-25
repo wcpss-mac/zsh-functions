@@ -1,0 +1,37 @@
+#!/bin/zsh
+################################
+## Wake County Public Schools ##
+## Z Shell function library   ##
+################################
+## Contributor: Andrew Zimmer ##
+## Last updated: 06/30/2022   ##
+################################
+## Purpose: Get the hostname  ##
+## of the machine, strip it   ##
+## of '.local' and report it. ##
+################################
+## Arguments:                 ##
+##   None.                    ##
+################################
+## Output:                    ##
+## - Hostname of machine.     ##
+## - Empty string if none was ##
+##   found.                   ##
+################################
+
+get-serial-number() {
+	# Export our customized path
+	export PATH="/Library/WCPSS/Apps/bin/:/Library/WCPSS/Apps/sbin/:Library/WCPSS/Scripts/Executables/:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/libexec"
+
+	# Set -e/-o errexit to force the script to terminate on any non-zero exit code
+	# Set -u/-o nounset to force the script to exit if unset variables are called
+	set -o errexit
+	set -o nounset
+
+	# Create variable and populate it with the machine's serial number after
+	# stripping the string of unneeded fluff.
+	local serial_number="$(system_profiler SPHardwareDataType | grep Serial | cut -d ':' -f 2 | tr -d ' ')"
+
+	# Return the value, returning an empty string if no hostname was found.
+	[[ -n "${serial_number}" ]] && echo "${serial_number}" || echo ""
+}

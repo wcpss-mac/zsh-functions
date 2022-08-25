@@ -1,0 +1,49 @@
+#!/bin/zsh
+################################
+## Wake County Public Schools ##
+## Z Shell function library   ##
+################################
+## Contributor: Andrew Zimmer ##
+## Last updated: 06/30/2022   ##
+################################
+## Purpose: Get the owner of  ##
+## the folder indicated.      ##
+################################
+## Arguments:                 ##
+## - Directory to check.      ##
+################################
+## Output:                    ##
+## - Username detected.       ##
+## - Empty string if no user. ##
+## - Error if no input.       ##
+################################
+
+get-owner-name() {
+	# Export our customized path
+	export PATH="/Library/WCPSS/Apps/bin/:/Library/WCPSS/Apps/sbin/:Library/WCPSS/Scripts/Executables/:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/libexec"
+
+	# Set -e/-o errexit to force the script to terminate on any non-zero exit code
+	# Set -u/-o nounset to force the script to exit if unset variables are called
+	set -o errexit
+	set -o nounset
+
+	# Declare variables.
+	local source_dir=""
+	local username=""
+	local user_id=""
+
+	# If the source directory argument is empty, error out. We need to know that.
+	# If it has contents, set to those.
+	if [[ -z "$1" ]]; then
+		echo "A directory needs to be provided."
+		exit 1
+	else
+		source_dir="$1"
+	fi
+
+	# Get username and user ID of the target.
+	username=$(stat -f '%Su' "$1")
+
+	# Return the value, returning empty string if no user found.
+	[[ -n "${username}" ]] && echo "${username}" || echo ""
+}
