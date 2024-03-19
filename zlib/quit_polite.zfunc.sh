@@ -28,4 +28,3 @@ function quit_polite() {
         echo "INFO: $APP_NAME is not running."
     fi
 }
-
