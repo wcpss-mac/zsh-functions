@@ -1,2 +1,2 @@
-# zsh-functions
-The supporting functions for ZSH scripts used at Wake County Public Schools. Suitable for use in any organization.
+# mac-admin-scripts
+Scripts that can be used in conjunction with JAMF or other systems to manage macOS devices
